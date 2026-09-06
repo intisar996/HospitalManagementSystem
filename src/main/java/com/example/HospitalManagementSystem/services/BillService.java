@@ -21,6 +21,7 @@ public class BillService {
     PatientService patientService;
     PatientRepository patientRepository;
 
+    @Autowired
 
     public BillService(BillRepository billRepository, PatientRepository patientRepository, PatientService patientService) {
         this.billRepository = billRepository;
@@ -29,7 +30,6 @@ public class BillService {
 
     }
 
-    @Autowired
 
 
 

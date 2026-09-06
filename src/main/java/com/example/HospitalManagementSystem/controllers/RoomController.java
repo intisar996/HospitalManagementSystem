@@ -1,18 +1,16 @@
 package com.example.HospitalManagementSystem.controllers;
 
 
-import com.example.HospitalManagementSystem.entities.Appointment;
 import com.example.HospitalManagementSystem.entities.Room;
 import com.example.HospitalManagementSystem.services.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 
 @RestController
-@RequestMapping("appointment")
+@RequestMapping("room")
 public class RoomController {
 
  RoomService roomService;
