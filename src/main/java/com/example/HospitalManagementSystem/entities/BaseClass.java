@@ -18,7 +18,7 @@ public class BaseClass {
      private Long id;
      private Boolean isActive;
      private Date createdDate;
-     private Date Date;
+     private Date updateDate;
 
 
 }

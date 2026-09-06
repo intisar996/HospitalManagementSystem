@@ -1,0 +1,10 @@
+
+
+
+Unhandled exception: java.lang.Exception
+
+solve: add throws Exception  in controller
+
+java.lang.NullPointerException: Cannot invoke "com.example.HospitalManagementSystem.services.MedicalRecordService.getById(java.lang.Long)" because "this.medicalRecordService" is null
+
+solve : add dependency
