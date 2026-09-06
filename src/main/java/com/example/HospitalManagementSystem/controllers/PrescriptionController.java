@@ -1,8 +1,9 @@
 package com.example.HospitalManagementSystem.controllers;
 
 
-import com.example.HospitalManagementSystem.entities.Prescription;
+import com.example.HospitalManagementSystem.dto.PrescriptionDTO;
 import com.example.HospitalManagementSystem.services.PrescriptionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("prescription")
-
 public class PrescriptionController {
 
-
     PrescriptionService prescriptionService;
-
 
     @Autowired
     public PrescriptionController(PrescriptionService prescriptionService) {
@@ -24,32 +22,53 @@ public class PrescriptionController {
 
 
     @PostMapping("add")
-    public Long addPrescription(@RequestParam String medicineName, @RequestParam String dosage, @RequestParam String durationDays, @RequestParam Long medicalRecordId) {
-        return prescriptionService.addPrescription(medicineName, dosage, durationDays, medicalRecordId);
+    public Long addPrescription(@Valid @RequestBody PrescriptionDTO dto) {
+
+        return prescriptionService.addPrescription(
+                dto.getMedicineName(),
+                dto.getDosage(),
+                dto.getDurationDays(),
+                dto.getMedicalRecordId()
+        );
     }
 
 
     @GetMapping("getAll")
-    public List<Prescription> getAllPrescriptions() {
-        return prescriptionService.getAllPrescriptions();
+    public List<PrescriptionDTO> getAllPrescriptions() {
+
+        return PrescriptionDTO.convertToDTO(
+                prescriptionService.getAllPrescriptions()
+        );
     }
 
 
     @GetMapping("getById")
-    public Prescription getById(@RequestParam Long id) {
-        return prescriptionService.getById(id);
+    public PrescriptionDTO getById(@RequestParam Long id) {
+
+        return PrescriptionDTO.convertToDTO(
+                prescriptionService.getById(id)
+        );
     }
 
 
     @PutMapping("update")
-    public Prescription updatePrescription(@RequestParam Long id, @RequestParam String dosage, @RequestParam String durationDays) throws Exception {
-        return prescriptionService.updatePrescription(id, dosage, durationDays);
+    public PrescriptionDTO updatePrescription(
+            @Valid @RequestBody PrescriptionDTO dto) throws Exception {
+
+        return PrescriptionDTO.convertToDTO(
+                prescriptionService.updatePrescription(
+                        dto.getPrescriptionId(),
+                        dto.getDosage(),
+                        dto.getDurationDays()
+                )
+        );
     }
 
 
-    @PutMapping("deleteById")
+    @DeleteMapping("deleteById")
     public Boolean deletePrescription(@RequestParam Long id) throws Exception {
-        return prescriptionService.deletePrescription(id);
 
+        return prescriptionService.deletePrescription(id);
     }
 }
+

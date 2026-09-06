@@ -1,66 +1,71 @@
 package com.example.HospitalManagementSystem.controllers;
 
-
-import com.example.HospitalManagementSystem.entities.Appointment;
-import com.example.HospitalManagementSystem.entities.Departments;
+import com.example.HospitalManagementSystem.dto.AppointmentDTO;
 import com.example.HospitalManagementSystem.services.AppointmentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("appointment")
 public class AppointmentController {
 
+    AppointmentService appointmentService;
 
-     AppointmentService appointmentService;
     @Autowired
     public AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
     }
 
-
-
-
     @PostMapping("add")
-    public Long addAppointment(@RequestParam Date date,@RequestParam String reason, @RequestParam String status ,@RequestParam  Long patientId,@RequestParam Long doctorId) {
-        return appointmentService.addAppointment(date,reason,status,patientId,doctorId);
-    }
+    public Long addAppointment(@Valid @RequestBody AppointmentDTO dto) {
 
+        return appointmentService.addAppointment(
+                dto.getAppointmentDate(),
+                dto.getReason(),
+                dto.getStatus(),
+                dto.getPatientId(),
+                dto.getDoctorId()
+        );
+    }
 
     @GetMapping("getAll")
-    public List<Appointment> getAllAppointment(){
-        return appointmentService.getAllAppointment();
+    public List<AppointmentDTO> getAllAppointment() {
+
+        List<AppointmentDTO> appointments =
+                AppointmentDTO.convertToDTO(
+                        appointmentService.getAllAppointment()
+                );
+
+        return appointments;
     }
-
-
 
     @GetMapping("getById")
-    public Appointment getById(@RequestParam Long id) {
-        return appointmentService.getById(id);
-    }
+    public AppointmentDTO getById(@RequestParam Long id) {
 
+        return AppointmentDTO.convertToDTO(
+                appointmentService.getById(id)
+        );
+    }
 
     @PutMapping("update")
-    public Appointment updateAppointment(@RequestParam Long id,@RequestParam  Date date, @RequestParam String reason, @RequestParam String status) throws Exception {
-        return appointmentService.updateAppointment(id,date,reason,status);
+    public AppointmentDTO updateAppointment(
+            @Valid @RequestBody AppointmentDTO dto) throws Exception {
+
+        return AppointmentDTO.convertToDTO(
+                appointmentService.updateAppointment(
+                        dto.getAppointmentId(),
+                        dto.getAppointmentDate(),
+                        dto.getReason(),
+                        dto.getStatus()
+                )
+        );
     }
 
-
-    @PutMapping("deleteById")
+    @DeleteMapping("deleteById")
     public Boolean deleteAppointment(@RequestParam Long id) throws Exception {
         return appointmentService.deleteAppointment(id);
-
     }
-
-
-
-
-
-
-
-
-
 }

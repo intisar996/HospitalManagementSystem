@@ -28,7 +28,7 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
-    public Long addDepartment(String name, String email, String phoneNumber, String specialization, Long departmentId){
+    public Long addDoctor(String name, String email, String phoneNumber, String specialization, Long departmentId){
 
         Departments departments = departmentsRepository.getById(departmentId);
         if(departments == null || departments.getIsActive() == false){

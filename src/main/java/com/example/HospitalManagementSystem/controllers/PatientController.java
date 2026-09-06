@@ -1,8 +1,10 @@
 package com.example.HospitalManagementSystem.controllers;
 
 
+import com.example.HospitalManagementSystem.dto.PatientDTO;
 import com.example.HospitalManagementSystem.entities.Patient;
 import com.example.HospitalManagementSystem.services.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,27 +27,30 @@ public class PatientController {
 
 
     @PostMapping("add")
-    public Long addPatient(@RequestParam String name, @RequestParam String gender,@RequestParam String phoneNumber,@RequestParam String bloodGroup) {
+    public Long addPatient(@Valid  @RequestParam String name, @RequestParam String gender, @RequestParam String phoneNumber, @RequestParam String bloodGroup) {
         return patientService.addPatient(name,gender,phoneNumber,bloodGroup);
     }
 
 
     @GetMapping("getAll")
-    public List<Patient> getAllPatients(){
-        return patientService.getAllPatient();
+    public List<PatientDTO> getAllPatients(){
+        return PatientDTO.convertToDTO(patientService.getAllPatient());
     }
 
 
 
     @GetMapping("getById")
-    public Patient getById(@RequestParam Long id) {
-        return patientService.getById(id);
+    public PatientDTO getById(@RequestParam Long id) {
+        return PatientDTO.convertToDTO(patientService.getById(id));
     }
 
 
     @PutMapping("update")
-    public Patient updatePatient(@RequestParam Long id, @RequestParam String name,@RequestParam String phoneNumber) throws Exception {
-        return patientService.updatePatient(id,name,phoneNumber);
+    public PatientDTO updatePatient(@Valid @RequestParam Long id,  PatientDTO dto) throws Exception {
+
+        return PatientDTO.convertToDTO(patientService.updatePatient(dto.getPatientId(),
+                dto.getPatientName(),
+                dto.getPhoneNumber()));
     }
 
 

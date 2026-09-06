@@ -1,11 +1,11 @@
 package com.example.HospitalManagementSystem.controllers;
 
-import com.example.HospitalManagementSystem.entities.Bill;
+import com.example.HospitalManagementSystem.dto.BillDTO;
 import com.example.HospitalManagementSystem.services.BillService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,40 +20,49 @@ public class BillController {
     }
 
     @PostMapping("add")
-    public Long addBill(
-            @RequestParam Double amount,
-            @RequestParam String status,
-            @RequestParam Date billDate,
-            @RequestParam Long patientId) {
+    public Long addBill(@Valid @RequestBody BillDTO dto) {
 
         return billService.addBill(
-                amount,
-                status,
-                billDate,
-                patientId
+                dto.getAmount(),
+                dto.getStatus(),
+                dto.getBillDate(),
+                dto.getPatientId()
         );
     }
 
     @GetMapping("getAll")
-    public List<Bill> getAllBill() {
-        return billService.getAllBill();
+    public List<BillDTO> getAllBill() {
+
+        List<BillDTO> bills =
+                BillDTO.convertToDTO(
+                        billService.getAllBill()
+                );
+
+        return bills;
     }
 
     @GetMapping("getById")
-    public Bill getById(@RequestParam Long id) {
-        return billService.getById(id);
+    public BillDTO getById(@RequestParam Long id) {
+
+        return BillDTO.convertToDTO(
+                billService.getById(id)
+        );
     }
 
     @PutMapping("update")
-    public Bill updateBill(
-            @RequestParam Long id,
-            @RequestParam Double amount,
-            @RequestParam String status) throws Exception {
+    public BillDTO updateBill(
+            @Valid @RequestBody BillDTO dto) throws Exception {
 
-        return billService.updateBill(id, amount, status);
+        return BillDTO.convertToDTO(
+                billService.updateBill(
+                        dto.getBillId(),
+                        dto.getAmount(),
+                        dto.getStatus()
+                )
+        );
     }
 
-    @PutMapping("deleteById")
+    @DeleteMapping("deleteById")
     public Boolean deleteBill(@RequestParam Long id) throws Exception {
         return billService.deleteBill(id);
     }
